@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "420749339844",
+    "project_id": "chat-together-12527",
+    "storage_bucket": "chat-together-12527.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420749339844:android:a50b4933657d069221ad91",
+        "android_client_info": {
+          "package_name": "com.example.chat_together"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420749339844-d0vdv2s5cnqll1dknrctck289aobuoiv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAst78IFDbNS9SoatIYMWS8ylavb5Fn300"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420749339844-1bj07utjj653bjbra7dteqripni0q683.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "420749339844-cu5mtckmv8n5b0lqtsngpouoa7456388.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatTogether"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
