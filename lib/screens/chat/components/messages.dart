@@ -35,6 +35,7 @@ class Messages extends StatelessWidget {
                     text: snapshot.data!.docs[index]['text'],
                     isMe: snapshot.data!.docs[index]['userId'] ==
                         futureSnapshot.data!.uid,
+                    image: snapshot.data!.docs[index]['userimage'],
                     id: ValueKey(
                       snapshot.data!.docs[index].id,
                     ));

@@ -24,12 +24,13 @@ class _NewMessageState extends State<NewMessage> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
-    FirebaseFirestore.instance.collection('chat').add(
+    await FirebaseFirestore.instance.collection('chat').add(
       {
         'text': _messageController.text,
         'createAt': Timestamp.now(),
         'userId': user!.uid,
         'username': userData['username'],
+        'userimage': userData['image_url'],
       },
     );
     _messageController.clear();

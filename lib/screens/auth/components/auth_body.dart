@@ -1,12 +1,16 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../components/already_have_an_account.dart';
 import '../../../components/rounded_button.dart';
-import './auth_form.dart';
+import '../../../components/rounded_container.dart';
+import '../../../components/rounded_password_field.dart';
+import '../../../components/user_image_picker.dart';
 import '../../../constants.dart';
 import './auth_background.dart';
 
@@ -18,7 +22,7 @@ class AuthBody extends StatefulWidget {
   });
   final bool isLoading;
   final void Function(String email, String username, String password,
-      bool isAuth, BuildContext context) submitUser;
+      File? image, bool isAuth, BuildContext context) submitUser;
 
   @override
   State<AuthBody> createState() => _AuthBodyState();
@@ -31,20 +35,33 @@ class _AuthBodyState extends State<AuthBody> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  File? _userImageFile;
 
   var _isLogIn = true;
+
+  void _pickImage(File pickedImage) {
+    _userImageFile = pickedImage;
+  }
 
   //enable validator
   void _trySubmit(BuildContext context) {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
 
-    if (isValid) {
+    if (_userImageFile == null && !_isLogIn) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Please pick an image')));
+      return;
+    }
+
+    if (isValid ) {
       _formKey.currentState!.save();
+      
       widget.submitUser(
         _emailController.text.trim(),
         _usernameController.text.trim(),
         _passwordController.text.trim(),
+        _userImageFile,
         _isLogIn,
         context,
       );
@@ -77,6 +94,7 @@ class _AuthBodyState extends State<AuthBody> {
                   autofocus: true,
                   validator: _validateEmail(),
                   controller: _emailResetController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(hintText: 'Enter your email'),
                 ),
               ),
@@ -113,18 +131,17 @@ class _AuthBodyState extends State<AuthBody> {
           height: sizeMediaQuery.height,
           width: double.infinity,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: sizeMediaQuery.height * 0.03,
-              ),
-              SvgPicture.asset(
-                'assets/icons/chat.svg',
-                height: sizeMediaQuery.height * 0.4,
-              ),
-              SizedBox(
-                height: sizeMediaQuery.height * 0.05,
-              ),
+              if (_isLogIn)
+                SvgPicture.asset(
+                  'assets/icons/chat.svg',
+                  height: sizeMediaQuery.height * 0.4,
+                ),
+              if (_isLogIn)
+                SizedBox(
+                  height: sizeMediaQuery.height * 0.05,
+                ),
               Text(
                 _isLogIn ? 'LOG IN' : 'SIGN UP',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -132,12 +149,68 @@ class _AuthBodyState extends State<AuthBody> {
               SizedBox(
                 height: sizeMediaQuery.height * 0.01,
               ),
-              AuthForm(
-                isLogIn: _isLogIn,
-                emailController: _emailController,
-                passwordController: _passwordController,
-                usernameController: _usernameController,
-                formKey: _formKey,
+              Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (!_isLogIn)
+                      UserImagePicker(
+                        imagePickerFucntion: _pickImage,
+                      ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    RoundedContainer(
+                      child: TextFormField(
+                        key: ValueKey('email'),
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: _validateEmail(),
+                        decoration: InputDecoration(
+                          hintText: 'Your email',
+                          icon:
+                              Icon(CupertinoIcons.person, color: kPrimaryColor),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    if (!_isLogIn)
+                      RoundedContainer(
+                        child: TextFormField(
+                          key: ValueKey('username'),
+                          controller: _usernameController,
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.length < 5) {
+                              return 'Username must be at least 5 characters.';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Username',
+                            icon: Icon(CupertinoIcons.person,
+                                color: kPrimaryColor),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    RoundedPasswordField(
+                      key: ValueKey('password'),
+                      onChanged: (value) {},
+                      controller: _passwordController,
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 8) {
+                          return 'Password must be at least 8 characters.';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 height: sizeMediaQuery.height * 0.01,
