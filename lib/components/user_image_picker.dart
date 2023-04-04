@@ -25,7 +25,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
       final pickedImage = await picker.pickImage(
         source: ImageSource.gallery,
         //gioi han dung luong anh
-        imageQuality: 70,
+        imageQuality: 90,
         maxWidth: 200,
       );
       final pickedImageFile = File(pickedImage!.path);

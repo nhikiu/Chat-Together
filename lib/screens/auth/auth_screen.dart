@@ -28,7 +28,6 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         _isLoading = true;
       });
-      print('lollololooooo');
       if (isLogin) {
         _userCredential =
             await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -49,7 +48,6 @@ class _AuthScreenState extends State<AuthScreen> {
         await ref.putFile(image!).whenComplete(() => null);
 
         final urlImage = await ref.getDownloadURL();
-        //log(urlImage as String);
 
         await FirebaseFirestore.instance
             .collection('users')
@@ -60,9 +58,6 @@ class _AuthScreenState extends State<AuthScreen> {
           'image_url': urlImage,
         });
       }
-      // setState(() {
-      //   _isLoading = false;
-      // });
     } on PlatformException catch (e) {
       String message = 'An error occurred, please check your credential';
 

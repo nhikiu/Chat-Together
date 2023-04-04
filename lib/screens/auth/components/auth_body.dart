@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,9 +55,9 @@ class _AuthBodyState extends State<AuthBody> {
       return;
     }
 
-    if (isValid ) {
+    if (isValid) {
       _formKey.currentState!.save();
-      
+
       widget.submitUser(
         _emailController.text.trim(),
         _usernameController.text.trim(),
@@ -70,8 +71,32 @@ class _AuthBodyState extends State<AuthBody> {
 
   FormFieldValidator _validateEmail() {
     return (value) {
-      if (value == null || value.isEmpty || !value.contains('@')) {
+      if (value == null || value.isEmpty || !EmailValidator.validate(value)) {
         return 'Please enter a valid email address.';
+      }
+      return null;
+    };
+  }
+
+  FormFieldValidator _validatorUserName() {
+    return (username) {
+      if (username == null ||
+          username.isEmpty ||
+          username.length < 8 ||
+          username.length > 20) {
+        return 'Username must be between 8 - 20 characters';
+      }
+      return null;
+    };
+  }
+
+  FormFieldValidator _validatorPassword() {
+    return (password) {
+      if (password == null ||
+          password.isEmpty ||
+          password.length < 8 ||
+          password.length > 20) {
+        return 'Password must be between 8 - 20 characters';
       }
       return null;
     };
@@ -111,6 +136,13 @@ class _AuthBodyState extends State<AuthBody> {
                     if (isValid) {
                       final String _emailReset =
                           _emailResetController.text.trim();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text('Please check your email to reset password'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
                       Navigator.of(context).pop();
                       log('Email enter to reset password: ${_emailReset}');
                       await FirebaseAuth.instance
@@ -180,14 +212,7 @@ class _AuthBodyState extends State<AuthBody> {
                         child: TextFormField(
                           key: ValueKey('username'),
                           controller: _usernameController,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                value.length < 5) {
-                              return 'Username must be at least 5 characters.';
-                            }
-                            return null;
-                          },
+                          validator: _validatorUserName(),
                           decoration: InputDecoration(
                             hintText: 'Username',
                             icon: Icon(CupertinoIcons.person,
@@ -200,14 +225,7 @@ class _AuthBodyState extends State<AuthBody> {
                       key: ValueKey('password'),
                       onChanged: (value) {},
                       controller: _passwordController,
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            value.length < 8) {
-                          return 'Password must be at least 8 characters.';
-                        }
-                        return null;
-                      },
+                      validator: _validatorPassword(),
                     ),
                   ],
                 ),
