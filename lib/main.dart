@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chat_together/screens/home/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,13 +8,13 @@ import './constants.dart';
 import './screens/auth/auth_screen.dart';
 import './screens/chat/chat_screen.dart';
 import './screens/welcome/welcome_screen.dart';
+import 'api/apis.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -42,11 +42,11 @@ class MyApp extends StatelessWidget {
             iconTheme: IconThemeData(color: Colors.black)),
       ),
       home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
+        stream: APIs.auth.authStateChanges(),
         builder: (context, snapshot) {
           //if use has data in database
           if (snapshot.hasData) {
-            return ChatScreen();
+            return HomeScreen();
           }
           //user haven't account
           return AuthScreen();
@@ -55,6 +55,7 @@ class MyApp extends StatelessWidget {
       routes: {
         WelcomeScreen.routeName: (context) => WelcomeScreen(),
         AuthScreen.routeName: (context) => AuthScreen(),
+        HomeScreen.routeName: (context) => HomeScreen(),
         ChatScreen.routeName: (context) => ChatScreen()
       },
     );
