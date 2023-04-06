@@ -1,7 +1,5 @@
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -31,14 +29,12 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = true;
       });
       if (isLogin) {
-        _userCredential =
-            await APIs.auth.signInWithEmailAndPassword(
+        _userCredential = await APIs.auth.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
       } else {
-        _userCredential =
-            await APIs.auth.createUserWithEmailAndPassword(
+        _userCredential = await APIs.auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
@@ -51,7 +47,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
         final urlImage = await ref.getDownloadURL();
 
-        await FirebaseFirestore.instance
+        await APIs.firestore
             .collection('users')
             .doc(_userCredential.user!.uid)
             .set({

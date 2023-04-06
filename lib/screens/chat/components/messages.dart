@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../../api/apis.dart';
 import './message_bubble.dart';
 
 class Messages extends StatelessWidget {
@@ -17,7 +17,7 @@ class Messages extends StatelessWidget {
           );
         }
         return StreamBuilder(
-          stream: FirebaseFirestore.instance
+          stream: APIs.firestore
               .collection('chat')
               .orderBy('createAt', descending: true)
               .snapshots(),

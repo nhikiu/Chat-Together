@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -37,14 +40,30 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: ListView.builder(
-            itemCount: 20,
-            physics: BouncingScrollPhysics(),
-            itemBuilder: (ctx, index) {
-              return InkWell(
-                onTap: () {},
-                child: ChatUserCard(),
-              );
-            }));
+        body: StreamBuilder(
+          stream: APIs.firestore.collection('users').snapshots(),
+          builder: (context, snapshot) {
+            final users = [];
+
+            if (snapshot.hasData) {
+              final data = snapshot.data?.docs;
+              for (var i in data!) {
+                log('Data: ${jsonEncode(i.data())}');
+                users.add(i.data()['username']);
+              }
+            }
+
+            return ListView.builder(
+                itemCount: users.length,
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (ctx, index) {
+                  return Text(users[index]);
+                  // InkWell(
+                  //   onTap: () {},
+                  //   child: ChatUserCard(),
+                  // );
+                });
+          },
+        ));
   }
 }
