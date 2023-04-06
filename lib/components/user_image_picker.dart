@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../helper/dialogs.dart';
+
 class UserImagePicker extends StatefulWidget {
   final void Function(File imagedPicker) imagePickerFucntion;
 
@@ -21,20 +23,26 @@ class _UserImagePickerState extends State<UserImagePicker> {
     final Size sizeMediaQuery = MediaQuery.of(context).size;
 
     Future _pickImage() async {
-      final picker = ImagePicker();
-      final pickedImage = await picker.pickImage(
-        source: ImageSource.gallery,
-        //gioi han dung luong anh
-        imageQuality: 90,
-        maxWidth: 200,
-      );
-      final pickedImageFile = File(pickedImage!.path);
+      try {
+        final picker = ImagePicker();
+        final pickedImage = await picker.pickImage(
+          source: ImageSource.gallery,
+          //gioi han dung luong anh
+          imageQuality: 90,
+          maxWidth: 200,
+        );
+        final pickedImageFile = File(pickedImage!.path);
 
-      setState(() {
-        _pickedImage = pickedImageFile;
-        widget.imagePickerFucntion(_pickedImage!);
-      });
-      log('Pick Image: ${_pickedImage}');
+        setState(() {
+          _pickedImage = pickedImageFile;
+          widget.imagePickerFucntion(_pickedImage!);
+        });
+        log('Pick Image: ${_pickedImage}');
+      } catch (e) {
+        log('Picker Image Error: ${e}');
+        Dialogs.showSnackBar(context, 'Something wrong with your image');
+        return null;
+      }
     }
 
     return Column(
