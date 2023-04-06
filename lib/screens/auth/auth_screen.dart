@@ -7,6 +7,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../api/apis.dart';
+import '../../helper/dialogs.dart';
 import 'components/auth_body.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -30,13 +32,13 @@ class _AuthScreenState extends State<AuthScreen> {
       });
       if (isLogin) {
         _userCredential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
+            await APIs.auth.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
       } else {
         _userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            await APIs.auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
@@ -65,10 +67,7 @@ class _AuthScreenState extends State<AuthScreen> {
         message = e.message!;
       }
       print(e.message);
-      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-      ));
+      Dialogs.showSnackBar(ctx, message);
       setState(() {
         _isLoading = false;
       });
@@ -86,13 +85,12 @@ class _AuthScreenState extends State<AuthScreen> {
         message = 'The email address is already in use by another account.';
       }
       print(err);
-      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-      ));
+      Dialogs.showSnackBar(ctx, message);
       setState(() {
         _isLoading = false;
       });
+    } catch (e) {
+      print('SIGN IN ERROR ${e}');
     }
   }
 

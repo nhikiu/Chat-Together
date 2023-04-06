@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../api/apis.dart';
 import './components/messages.dart';
 import './components/new_message.dart';
 
@@ -33,7 +33,7 @@ class ChatScreen extends StatelessWidget {
             icon: Icon(CupertinoIcons.ellipsis_vertical),
             onChanged: (identifier) {
               if (identifier == 'logout') {
-                FirebaseAuth.instance.signOut();
+                APIs.auth.signOut();
               }
             },
           ),

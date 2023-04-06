@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chat_together/helper/dialogs.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,8 +51,7 @@ class _AuthBodyState extends State<AuthBody> {
     FocusScope.of(context).unfocus();
 
     if (_userImageFile == null && !_isLogIn) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Please pick an image')));
+      Dialogs.showSnackBar(context, 'Please pick an image');
       return;
     }
 
@@ -136,13 +136,9 @@ class _AuthBodyState extends State<AuthBody> {
                     if (isValid) {
                       final String _emailReset =
                           _emailResetController.text.trim();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content:
-                              Text('Please check your email to reset password'),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                      Dialogs.showSnackBar(
+                          context, 'Please check your email to reset password');
+
                       Navigator.of(context).pop();
                       log('Email enter to reset password: ${_emailReset}');
                       await FirebaseAuth.instance
