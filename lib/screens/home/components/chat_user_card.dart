@@ -1,9 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/chat_user.dart';
+
 class ChatUserCard extends StatelessWidget {
+  final ChatUser chatUser;
+
   const ChatUserCard({
     super.key,
+    required this.chatUser,
   });
 
   @override
@@ -14,20 +19,31 @@ class ChatUserCard extends StatelessWidget {
       elevation: 5,
       child: ListTile(
         leading: CircleAvatar(
-          child: Icon(CupertinoIcons.person),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundImage: chatUser.imageUrl.isEmpty
+              ? null
+              : NetworkImage(chatUser.imageUrl),
         ),
         title: Text(
-          'Demo username',
+          chatUser.username,
           maxLines: 1,
         ),
         subtitle: Text(
           'Last user message',
           maxLines: 1,
         ),
-        trailing: Text(
-          '12:00 PM',
-          style: TextStyle(color: Colors.black54),
-        ),
+        trailing: chatUser.isOnline
+            ? Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(10)),
+              )
+            : Text(
+                '12:00 PM',
+                style: TextStyle(color: Colors.black54),
+              ),
       ),
     );
   }
