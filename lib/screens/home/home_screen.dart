@@ -1,13 +1,12 @@
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:chat_together/models/chat_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../api/apis.dart';
-import '../../helper/dialogs.dart';
-import 'components/chat_user_card.dart';
+import './components/chat_user_card.dart';
+import '../../screens/profile/profile_screen.dart';
+import '../../models/chat_user.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
@@ -29,6 +28,15 @@ class HomeScreen extends StatelessWidget {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
+                        Icon(CupertinoIcons.person),
+                        Text('Your profile')
+                      ]),
+                  value: 'profile-detail',
+                ),
+                DropdownMenuItem(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
                         Icon(CupertinoIcons.square_arrow_right),
                         Text('Logout')
                       ]),
@@ -37,8 +45,16 @@ class HomeScreen extends StatelessWidget {
               ],
               icon: Icon(CupertinoIcons.ellipsis_vertical),
               onChanged: (identifier) {
+                log("IDENTIFIER: ${identifier}");
                 if (identifier == 'logout') {
                   APIs.auth.signOut();
+                } else if (identifier == 'profile-detail') {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => ProfileScreen(chatuser: chatusers[0])));
+                  // Navigator.pushNamed(context, ProfileScreen.routeName,
+                  //     arguments: <String, ChatUser>{
+                  //       'chatuser': chatusers[0],
+                  //     });
                 }
               },
             ),

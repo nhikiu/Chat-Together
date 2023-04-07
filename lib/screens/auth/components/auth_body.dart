@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:chat_together/helper/dialogs.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +14,7 @@ import '../../../components/rounded_password_field.dart';
 import '../../../components/user_image_picker.dart';
 import '../../../constants.dart';
 import './auth_background.dart';
+import '../../../helper/dialogs.dart';
 
 class AuthBody extends StatefulWidget {
   const AuthBody({
