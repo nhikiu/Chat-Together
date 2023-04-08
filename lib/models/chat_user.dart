@@ -8,13 +8,13 @@ class ChatUser {
     required this.username,
     required this.lastActive,
   });
-  late final bool isOnline;
-  late final String id;
-  late final String pushToken;
-  late final String imageUrl;
-  late final String email;
-  late final String username;
-  late final String lastActive;
+  late bool isOnline;
+  late String id;
+  late String pushToken;
+  late String imageUrl;
+  late String email;
+  late String username;
+  late String lastActive;
 
   ChatUser.fromJson(Map<String, dynamic> json) {
     isOnline = json['is_online'] ?? '';
