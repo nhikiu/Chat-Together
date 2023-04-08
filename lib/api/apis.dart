@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_together/models/chat_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,12 +11,29 @@ class APIs {
 
   static User get user => auth.currentUser!;
 
+  static late ChatUser me;
+
   static Future<bool> userExist() async {
     return (await firestore
             .collection('users')
             .doc(auth.currentUser!.uid)
             .get())
         .exists;
+  }
+
+  static Future<void> getSelfInfor() async {
+    await firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .get()
+        .then((_user) async {
+      if (_user.exists) {
+        me = ChatUser.fromJson(_user.data()!);
+        log('MY INFOR: ${me.toJson()}');
+      } else {
+        await createUser().then((value) => getSelfInfor());
+      }
+    });
   }
 
   static Future<void> createUser() async {
@@ -33,5 +52,18 @@ class APIs {
         .collection('users')
         .doc(user.uid)
         .set(chatUser.toJson());
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
+    return firestore
+        .collection('users')
+        .where('id', isNotEqualTo: user.uid)
+        .snapshots();
+  }
+
+  static Future<void> updateUser() async {
+    await firestore.collection('users').doc(user.uid).update({
+      'username': me.username,
+    });
   }
 }
