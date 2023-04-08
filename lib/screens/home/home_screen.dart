@@ -8,11 +8,22 @@ import './components/chat_user_card.dart';
 import '../../screens/profile/profile_screen.dart';
 import '../../models/chat_user.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
   HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   List<ChatUser> chatusers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    APIs.getSelfInfor();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,18 +61,15 @@ class HomeScreen extends StatelessWidget {
                   APIs.auth.signOut();
                 } else if (identifier == 'profile-detail') {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => ProfileScreen(chatuser: chatusers[0])));
-                  // Navigator.pushNamed(context, ProfileScreen.routeName,
-                  //     arguments: <String, ChatUser>{
-                  //       'chatuser': chatusers[0],
-                  //     });
+                      builder: (_) => ProfileScreen(chatuser: APIs.me)));
+                  // Navigator.of(context).pushNamed(ProfileScreen.routeName, arguments: {'chatuser': APIs.me});
                 }
               },
             ),
           ],
         ),
         body: StreamBuilder(
-          stream: APIs.firestore.collection('users').snapshots(),
+          stream: APIs.getAllUsers(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
@@ -95,7 +103,8 @@ class HomeScreen extends StatelessWidget {
                               chatUser: chatusers[index],
                             ),
                           );
-                        });
+                        },
+                      );
             }
           },
         ));
