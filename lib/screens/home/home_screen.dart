@@ -17,7 +17,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<ChatUser> chatusers = [];
+  List<ChatUser> _chatusers = [];
+  List<ChatUser> _chatusersSearch = [];
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -29,10 +31,40 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Chat'),
+          title: _isSearching
+              ? Container(
+                  margin: EdgeInsets.symmetric(vertical: 50),
+                  child: TextField(
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Username, Email,...'),
+                    autofocus: true,
+                    onChanged: (value) {
+                      _chatusersSearch.clear();
+                      for (var i in _chatusers) {
+                        if (i.email
+                                .toLowerCase()
+                                .contains(value.toLowerCase().trim()) ||
+                            i.username.toLowerCase().contains(value.trim())) {
+                          _chatusersSearch.add(i);
+                        }
+                      }
+                      setState(() {
+                        _chatusersSearch;
+                      });
+                    },
+                  ),
+                )
+              : Text('Chat Together'),
           //leading: Icon(CupertinoIcons.home),
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.search)),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isSearching = !_isSearching;
+                  });
+                },
+                icon: Icon(CupertinoIcons.search)),
           ],
         ),
         drawer: Drawer(
@@ -70,26 +102,30 @@ class _HomeScreenState extends State<HomeScreen> {
               case ConnectionState.done:
                 if (snapshot.hasData) {
                   final data = snapshot.data?.docs;
-                  chatusers =
-                      data!.map((e) => ChatUser.fromJson(e.data())).toList() ??
-                          [];
-                  for (var i in chatusers) {
-                    log("DATA: ${i.toJson()}");
+                  _chatusers =
+                      data!.map((e) => ChatUser.fromJson(e.data())).toList();
+
+                  for (var i in _chatusers) {
+                    log("DATA user in list: ${i.toJson()}");
                   }
                 }
 
-                return chatusers.isEmpty
+                return _chatusers.isEmpty
                     ? Center(
                         child: Text('No connection found'),
                       )
                     : ListView.builder(
-                        itemCount: chatusers.length,
+                        itemCount: _isSearching
+                            ? _chatusersSearch.length
+                            : _chatusers.length,
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (ctx, index) {
                           return InkWell(
                             onTap: () {},
                             child: ChatUserCard(
-                              chatUser: chatusers[index],
+                              chatUser: _isSearching
+                                  ? _chatusersSearch[index]
+                                  : _chatusers[index],
                             ),
                           );
                         },
