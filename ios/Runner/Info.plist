@@ -48,10 +48,9 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Privacy - Photo Library Usage Description</string>
+	<string>App requires access to the photo library for picking pictures.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Privacy - Camera Usage Description</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Privacy - Microphone Usage Description</string>
+	<string>App requires access to the camera for taking pictures</string>
+	
 </dict>
 </plist>
