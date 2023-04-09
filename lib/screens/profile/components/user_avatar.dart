@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../helper/dialogs.dart';
 import '../../../models/chat_user.dart';
 
-class UserAvatar extends StatelessWidget {
+class UserAvatar extends StatefulWidget {
   final ChatUser chatuser;
   const UserAvatar({
     super.key,
@@ -15,90 +16,56 @@ class UserAvatar extends StatelessWidget {
   });
 
   @override
+  State<UserAvatar> createState() => _UserAvatarState();
+}
+
+class _UserAvatarState extends State<UserAvatar> {
+  String? _imageFile;
+
+  @override
   Widget build(BuildContext context) {
     final Size sizeMediaQuery = MediaQuery.of(context).size;
-
-    Widget ImageButton(String image) {
-      return ElevatedButton(
-        onPressed: () async {
-          try {
-            final ImagePicker _picker = ImagePicker();
-            // Pick an image.
-            final XFile? _image =
-                await _picker.pickImage(source: ImageSource.gallery);
-
-            if (_image != null) {
-              log('Image path: ${_image.path} and Mime Type: ${_image.mimeType}');
-            }
-          } catch (e) {
-            Dialogs.showSnackBar(context, 'Something wrong with your image');
-          }
-          Navigator.pop(context);
-        },
-        style: ElevatedButton.styleFrom(
-          shape: CircleBorder(),
-          backgroundColor: Colors.white,
-          fixedSize:
-              Size(sizeMediaQuery.width * 0.2, sizeMediaQuery.width * 0.2),
-        ),
-        child: Image.asset(image),
-      );
-    }
-
-    void _showModelBottom() {
-      showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-        ),
-        builder: (_) {
-          return Container(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Pick your avatar',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 25),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ImageButton('assets/images/add-image.png'),
-                    ImageButton('assets/images/camera.png'),
-                  ],
-                )
-              ],
-            ),
-          );
-        },
-      );
-    }
-
     return Stack(
       children: [
-        CircleAvatar(
-          radius: sizeMediaQuery.width * 0.2,
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          backgroundImage: chatuser.imageUrl.isEmpty
-              ? null
-              : NetworkImage(chatuser.imageUrl),
-        ),
+        _imageFile != null
+            ? CircleAvatar(
+                radius: sizeMediaQuery.width * 0.2,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                backgroundImage: widget.chatuser.imageUrl.isEmpty
+                    ? null
+                    : FileImage(File(_imageFile!)),
+              )
+            : CircleAvatar(
+                radius: sizeMediaQuery.width * 0.2,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                backgroundImage: widget.chatuser.imageUrl.isEmpty
+                    ? null
+                    : NetworkImage(widget.chatuser.imageUrl),
+              ),
         Positioned(
           right: 0,
           bottom: 0,
           child: MaterialButton(
             color: Colors.white.withOpacity(0.7),
             shape: CircleBorder(),
-            onPressed: () {
-              _showModelBottom();
+            onPressed: () async {
+              try {
+                final ImagePicker _picker = ImagePicker();
+                // Pick an image.
+                final XFile? _image =
+                    await _picker.pickImage(source: ImageSource.gallery);
+
+                if (_image != null) {
+                  setState(() {
+                    _imageFile = _image.path;
+                  });
+                  log('Image path: ${_imageFile}');
+                }
+              } catch (e) {
+                Dialogs.showSnackBar(
+                    context, 'Something wrong with your image');
+              }
+              //Navigator.pop(context);
             },
             child: Icon(
               CupertinoIcons.pencil,
