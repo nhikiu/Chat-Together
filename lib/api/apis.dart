@@ -3,16 +3,19 @@ import 'dart:developer';
 import 'package:chat_together/models/chat_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class APIs {
   static FirebaseAuth auth = FirebaseAuth.instance;
 
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  static FirebaseStorage storage = FirebaseStorage.instance;
+
   static User get user => auth.currentUser!;
 
   static late ChatUser me;
-
+ 
   static Future<bool> userExist() async {
     return (await firestore
             .collection('users')
@@ -29,8 +32,9 @@ class APIs {
         .then((_user) async {
       if (_user.exists) {
         me = ChatUser.fromJson(_user.data()!);
-        log('MY INFOR: ${me.toJson()}');
+        log('APIs - MY INFOR: ${me.toJson()}');
       } else {
+        log('dont exist');
         await createUser().then((value) => getSelfInfor());
       }
     });
@@ -64,6 +68,7 @@ class APIs {
   static Future<void> updateUser() async {
     await firestore.collection('users').doc(user.uid).update({
       'username': me.username,
+      //'image_url': me.imageUrl
     });
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_together/models/chat_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _AuthScreenState extends State<AuthScreen> {
           password: password,
         );
 
-        final ref = FirebaseStorage.instance
+        final ref = APIs.storage
             .ref()
             .child('user_image')
             .child('${_userCredential.user!.uid}.jpg');
@@ -51,9 +52,20 @@ class _AuthScreenState extends State<AuthScreen> {
             .collection('users')
             .doc(_userCredential.user!.uid)
             .set({
+          'id': _userCredential.user!.uid,
           'email': email,
           'username': username,
           'image_url': urlImage,
+          'is_online': true,
+          'last_active': '',
+          'push_token': ''
+        });
+        await APIs.firestore
+            .collection('users')
+            .doc(APIs.auth.currentUser!.uid)
+            .get()
+            .then((value) {
+          APIs.me = ChatUser.fromJson(value.data()!);
         });
       }
     } on PlatformException catch (e) {

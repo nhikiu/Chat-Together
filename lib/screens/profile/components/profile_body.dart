@@ -9,14 +9,22 @@ import '../../../models/chat_user.dart';
 import './logout_button.dart';
 import './user_avatar.dart';
 
-class ProfileBody extends StatelessWidget {
+class ProfileBody extends StatefulWidget {
   ProfileBody({
     super.key,
     required this.chatuser,
   });
 
   final ChatUser chatuser;
+  
+
+  @override
+  State<ProfileBody> createState() => _ProfileBodyState();
+}
+
+class _ProfileBodyState extends State<ProfileBody> {
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final Size sizeMediaQuery = MediaQuery.of(context).size;
@@ -38,20 +46,20 @@ class ProfileBody extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                 ),
                 UserAvatar(
-                  chatuser: chatuser,
+                  chatuser: widget.chatuser,
                 ),
                 SizedBox(
                   height: sizeMediaQuery.height * 0.03,
                 ),
                 Text(
-                  chatuser.email,
+                  widget.chatuser.email,
                   style: TextStyle(color: Colors.black54, fontSize: 20),
                 ),
                 SizedBox(
                   height: sizeMediaQuery.height * 0.03,
                 ),
                 TextFormField(
-                  initialValue: chatuser.username,
+                  initialValue: widget.chatuser.username,
                   onSaved: (newValue) {
                     APIs.me.username = newValue ?? '';
                   },

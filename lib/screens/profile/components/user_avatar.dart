@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../api/apis.dart';
 import '../../../helper/dialogs.dart';
 import '../../../models/chat_user.dart';
 
@@ -52,19 +53,40 @@ class _UserAvatarState extends State<UserAvatar> {
               try {
                 final ImagePicker _picker = ImagePicker();
                 // Pick an image.
-                final XFile? _image =
-                    await _picker.pickImage(source: ImageSource.gallery);
+                final XFile? _image = await _picker.pickImage(
+                  source: ImageSource.gallery,
+                  imageQuality: 90,
+                  maxWidth: 200,
+                );
 
                 if (_image != null) {
                   setState(() {
                     _imageFile = _image.path;
                   });
+                  // final ref = APIs.storage
+                  //     .ref()
+                  //     .child('user_image')
+                  //     .child('${APIs.me.id}.jpg');
+                  // await ref.putFile(File(_imageFile!)).whenComplete(() => null);
+
+                  // final urlImage = await ref.getDownloadURL();
+                  // APIs.me.imageUrl = urlImage;
+
                   log('Image path: ${_imageFile}');
                 }
               } catch (e) {
+                log('IMAGE ERROR: $e');
                 Dialogs.showSnackBar(
                     context, 'Something wrong with your image');
               }
+              final ref = APIs.storage
+                      .ref()
+                      .child('user_image')
+                      .child('${APIs.me.id}.jpg');
+                  await ref.putFile(File(_imageFile!)).whenComplete(() => null);
+
+                  final urlImage = await ref.getDownloadURL();
+                  APIs.me.imageUrl = urlImage;
               //Navigator.pop(context);
             },
             child: Icon(

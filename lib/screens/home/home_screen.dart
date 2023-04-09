@@ -75,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               TextButton.icon(
                   onPressed: () {
+                    Navigator.of(context).pop();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => ProfileScreen(chatuser: APIs.me)));
                   },
