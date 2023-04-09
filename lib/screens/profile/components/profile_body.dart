@@ -10,17 +10,17 @@ import './logout_button.dart';
 import './user_avatar.dart';
 
 class ProfileBody extends StatelessWidget {
-  const ProfileBody({
+  ProfileBody({
     super.key,
     required this.chatuser,
   });
 
   final ChatUser chatuser;
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final Size sizeMediaQuery = MediaQuery.of(context).size;
-    final _formKey = GlobalKey<FormState>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Profile'),
