@@ -48,6 +48,7 @@ class LogOutButton extends StatelessWidget {
                 TextButton(
                   onPressed: () async {
                     Dialogs.showProgressBar(context);
+                    Navigator.pop(context);
                     await APIs.auth.signOut().then((value) {
                       //hiden dialog
                       Navigator.pop(context);
