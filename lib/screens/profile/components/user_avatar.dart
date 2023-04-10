@@ -1,12 +1,4 @@
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
-import '../../../api/apis.dart';
-import '../../../helper/dialogs.dart';
 import '../../../models/chat_user.dart';
 
 class UserAvatar extends StatefulWidget {
@@ -27,12 +19,11 @@ class _UserAvatarState extends State<UserAvatar> {
   Widget build(BuildContext context) {
     final Size sizeMediaQuery = MediaQuery.of(context).size;
     return CircleAvatar(
-                radius: sizeMediaQuery.width * 0.2,
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-                backgroundImage: widget.chatuser.imageUrl.isEmpty
-                    ? null
-                    : NetworkImage(widget.chatuser.imageUrl),
-              
+      radius: sizeMediaQuery.width * 0.2,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      backgroundImage: widget.chatuser.imageUrl.isEmpty
+          ? null
+          : NetworkImage(widget.chatuser.imageUrl),
     );
   }
 }
