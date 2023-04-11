@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:chat_together/screens/chat/chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +7,7 @@ import '../../api/apis.dart';
 import './components/chat_user_card.dart';
 import '../../screens/profile/profile_screen.dart';
 import '../../models/chat_user.dart';
+import '../chat/chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';

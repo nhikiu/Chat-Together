@@ -1,8 +1,9 @@
-import 'package:chat_together/api/apis.dart';
-import 'package:chat_together/models/message.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/chat_user.dart';
+import '../../../api/apis.dart';
+import '../../../helper/date_util.dart';
+import '../../../models/message.dart';
 
 class ChatUserCard extends StatelessWidget {
   final ChatUser chatUser;
@@ -45,7 +46,9 @@ class ChatUserCard extends StatelessWidget {
                     ? (APIs.user.uid == _lastMessage!.fromid
                             ? 'You: '
                             : '${chatUser.username}: ') +
-                        '${_lastMessage!.text}'
+                        (_lastMessage!.text.length < 15
+                            ? '${_lastMessage!.text}'
+                            : '')
                     : '',
                 maxLines: 1,
               ),
@@ -58,7 +61,10 @@ class ChatUserCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10)),
                     )
                   : Text(
-                      '12:00 PM',
+                      _lastMessage != null
+                          ? DateUtil.getLastMessageTime(
+                              context: context, time: _lastMessage!.createAt)
+                          : '',
                       style: TextStyle(color: Colors.black54),
                     ),
             ),

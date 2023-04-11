@@ -16,7 +16,6 @@ class ProfileBody extends StatefulWidget {
   });
 
   final ChatUser chatuser;
-  
 
   @override
   State<ProfileBody> createState() => _ProfileBodyState();

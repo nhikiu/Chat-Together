@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:chat_together/models/chat_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../api/apis.dart';
 import '../../helper/dialogs.dart';
-import 'components/auth_body.dart';
+import './components/auth_body.dart';
+import '../../models/chat_user.dart';
 
 class AuthScreen extends StatefulWidget {
   static const routeName = '/auth';

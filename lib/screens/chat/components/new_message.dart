@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../../../api/apis.dart';
 import '../../../constants.dart';
 import '../../../models/chat_user.dart';
@@ -40,12 +41,6 @@ class _NewMessageState extends State<NewMessage> {
               onPressed: () {},
               icon: Icon(
                 CupertinoIcons.photo,
-                color: Theme.of(context).colorScheme.primary,
-              )),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                CupertinoIcons.smiley_fill,
                 color: Theme.of(context).colorScheme.primary,
               )),
           Expanded(

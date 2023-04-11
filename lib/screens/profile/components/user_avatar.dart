@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../models/chat_user.dart';
 
 class UserAvatar extends StatefulWidget {
