@@ -1,10 +1,20 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import '../../../api/apis.dart';
 import './message_bubble.dart';
+import '../../../models/chat_user.dart';
+import '../../../models/message.dart';
 
 class Messages extends StatelessWidget {
-  const Messages({super.key});
+  Messages({super.key, required this.chatUser});
+
+  final ChatUser chatUser;
+
+  List<Message> _messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -17,30 +27,27 @@ class Messages extends StatelessWidget {
           );
         }
         return StreamBuilder(
-          stream: APIs.firestore
-              .collection('chat')
-              .orderBy('createAt', descending: true)
-              .snapshots(),
+          stream: APIs.getAllMessages(chatUser),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             }
+            final data = snapshot.data?.docs;
+            log('DATA MESSAGE at 0: ${jsonEncode(data?[0].data())}');
 
-            return ListView.builder(
-              reverse: true,
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                return MessageBubble(
-                    username: snapshot.data!.docs[index]['username'],
-                    text: snapshot.data!.docs[index]['text'],
-                    isMe: snapshot.data!.docs[index]['userId'] ==
-                        futureSnapshot.data!.uid,
-                    image: snapshot.data!.docs[index]['userimage'],
-                    id: ValueKey(
-                      snapshot.data!.docs[index].id,
-                    ));
-              },
-            );
+            _messages =
+                data?.map((e) => Message.fromJson(e.data())).toList() ?? [];
+            return _messages.length == 0
+                ? Center(child: Text('Start chat'))
+                : ListView.builder(
+                    reverse: true,
+                    itemCount: _messages.length,
+                    itemBuilder: (context, index) {
+                      return MessageBubble(
+                        message: _messages[index],
+                      );
+                    },
+                  );
           },
         );
       },
