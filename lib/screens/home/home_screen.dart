@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:chat_together/screens/chat/chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -122,7 +123,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (ctx, index) {
                           return InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => ChatScreen(
+                                      chatuser: _isSearching
+                                          ? _chatusersSearch[index]
+                                          : _chatusers[index])));
+                            },
                             child: ChatUserCard(
                               chatUser: _isSearching
                                   ? _chatusersSearch[index]
