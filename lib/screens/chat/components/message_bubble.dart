@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 
-class MessageBubble extends StatelessWidget {
-  const MessageBubble({
-    super.key,
-    required this.text,
-    required this.isMe,
-    required this.id,
-    required this.username,
-    required this.image,
-  });
+import '../../../models/message.dart';
+import '../../../api/apis.dart';
+import '../../../helper/date_util.dart';
 
-  final String username;
-  final String text;
-  final bool isMe;
-  final Key id;
-  final String image;
+class MessageBubble extends StatelessWidget {
+  MessageBubble({
+    super.key,
+    required this.message,
+  });
+  final Message message;
 
   Widget UserAvatar() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5),
       child: CircleAvatar(
-        backgroundImage: NetworkImage(image),
+        backgroundImage: NetworkImage(message.userimage),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isMe = (APIs.user.uid == message.fromid);
+    print('${isMe}');
+
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
@@ -50,16 +48,28 @@ class MessageBubble extends StatelessWidget {
             crossAxisAlignment:
                 isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              Text(
-                username,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isMe
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    message.username,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isMe
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.primary),
+                  ),
+                  Text(
+                    DateUtil.getFormattedTime(
+                        context: context, time: message.createAt),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: isMe ? Colors.white70 : Colors.black54),
+                  )
+                ],
               ),
               Text(
-                text,
+                message.text,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                     color: isMe
