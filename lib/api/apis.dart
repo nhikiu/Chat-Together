@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chat_together/models/chat_user.dart';
+import 'package:chat_together/models/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,7 +16,7 @@ class APIs {
   static User get user => auth.currentUser!;
 
   static late ChatUser me;
- 
+
   static Future<bool> userExist() async {
     return (await firestore
             .collection('users')
@@ -68,7 +69,51 @@ class APIs {
   static Future<void> updateUser() async {
     await firestore.collection('users').doc(user.uid).update({
       'username': me.username,
-      //'image_url': me.imageUrl
     });
+  }
+
+  static String getIdConversation(String id) {
+    if (id.hashCode >= user.uid.hashCode) {
+      return '${user.uid}_${id}';
+    }
+    return '${id}_${user.uid}';
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
+      ChatUser chatuser) {
+    return firestore
+        .collection('chats/${getIdConversation(chatuser.id)}/messages/')
+        .orderBy('createAt', descending: true)
+        .snapshots();
+  }
+
+  static Future<void> sendMessage(ChatUser chatuser, String text) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+    final userData = await APIs.firestore
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    final Message message = Message(
+        fromid: user.uid,
+        toid: chatuser.id,
+        userimage: userData['image_url'],
+        text: text,
+        createAt: time,
+        type: Type.text,
+        username: userData['username']);
+
+    final ref = firestore
+        .collection('chats/${getIdConversation(chatuser.id)}/messages/');
+
+    await ref.doc(time).set(message.toJson());
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
+      ChatUser chatuser) {
+    return firestore
+        .collection('chats/${getIdConversation(chatuser.id)}/messages/')
+        .orderBy('createAt', descending: true)
+        .limit(1)
+        .snapshots();
   }
 }
