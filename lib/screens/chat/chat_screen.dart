@@ -1,47 +1,69 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../api/apis.dart';
+import '../../models/chat_user.dart';
 import './components/messages.dart';
 import './components/new_message.dart';
 
 class ChatScreen extends StatelessWidget {
   static const routeName = '/chat';
 
-  const ChatScreen({super.key});
+  const ChatScreen({super.key, required this.chatuser});
+
+  final ChatUser chatuser;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat'),
-        leading: Icon(CupertinoIcons.home),
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.search)),
-          DropdownButton(
-            items: [
-              DropdownMenuItem(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Icon(CupertinoIcons.square_arrow_right),
-                      Text('Logout')
-                    ]),
-                value: 'logout',
+        title: InkWell(
+          onTap: () {},
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                backgroundImage: chatuser.imageUrl.isEmpty
+                    ? null
+                    : NetworkImage(chatuser.imageUrl),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    chatuser.username,
+                    maxLines: 1,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    'Last seen not available',
+                    maxLines: 1,
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
               )
             ],
-            icon: Icon(CupertinoIcons.ellipsis_vertical),
-            onChanged: (identifier) {
-              if (identifier == 'logout') {
-                APIs.auth.signOut();
-              }
-            },
           ),
-        ],
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Expanded(child: Messages()), NewMessage()],
+        children: [
+          Expanded(
+              child: Messages(
+            chatUser: chatuser,
+          )),
+          NewMessage(chatUser: chatuser)
+        ],
       ),
     );
   }
