@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import './firebase_options.dart';
 import './constants.dart';
 import './screens/auth/auth_screen.dart';
-import './screens/chat/chat_screen.dart';
 import './screens/welcome/welcome_screen.dart';
 import './api/apis.dart';
 import './screens/home/home_screen.dart';
@@ -56,7 +55,6 @@ class MyApp extends StatelessWidget {
         WelcomeScreen.routeName: (context) => WelcomeScreen(),
         AuthScreen.routeName: (context) => AuthScreen(),
         HomeScreen.routeName: (context) => HomeScreen(),
-        ChatScreen.routeName: (context) => ChatScreen()
       },
     );
   }
