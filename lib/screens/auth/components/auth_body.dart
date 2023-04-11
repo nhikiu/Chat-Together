@@ -80,11 +80,8 @@ class _AuthBodyState extends State<AuthBody> {
 
   FormFieldValidator _validatorUserName() {
     return (username) {
-      if (username == null ||
-          username.isEmpty ||
-          username.length < 8 ||
-          username.length > 20) {
-        return 'Username must be between 8 - 20 characters';
+      if (username == null || username.isEmpty || username.length > 12) {
+        return 'Username can be upto a maximum of 12 characters';
       }
       return null;
     };
