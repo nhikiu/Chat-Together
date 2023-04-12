@@ -55,8 +55,6 @@ class _AuthScreenState extends State<AuthScreen> {
           'email': email,
           'username': username,
           'image_url': urlImage,
-          'is_online': true,
-          'last_active': '',
           'push_token': ''
         });
         await APIs.firestore

@@ -69,21 +69,13 @@ class ChatUserCard extends StatelessWidget {
                     : '',
                 maxLines: 1,
               ),
-              trailing: chatUser.isOnline
-                  ? Container(
-                      width: 15,
-                      height: 15,
-                      decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(10)),
-                    )
-                  : Text(
-                      _lastMessage != null
-                          ? DateUtil.getMessageTime(
-                              context: context, time: _lastMessage!.createAt)
-                          : '',
-                      style: const TextStyle(color: Colors.black54),
-                    ),
+              trailing: Text(
+                _lastMessage != null
+                    ? DateUtil.getMessageTime(
+                        context: context, time: _lastMessage!.createAt)
+                    : '',
+                style: const TextStyle(color: Colors.black54),
+              ),
             ),
           );
         });

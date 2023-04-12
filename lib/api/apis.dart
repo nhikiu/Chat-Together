@@ -46,13 +46,12 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
-        isOnline: false,
-        id: user.uid,
-        pushToken: '',
-        imageUrl: user.photoURL.toString(),
-        email: user.email.toString(),
-        username: user.displayName.toString(),
-        lastActive: time);
+      id: user.uid,
+      pushToken: '',
+      imageUrl: user.photoURL.toString(),
+      email: user.email.toString(),
+      username: user.displayName.toString(),
+    );
 
     return await firestore
         .collection('users')
