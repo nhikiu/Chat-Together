@@ -16,7 +16,7 @@ class WelcomeBody extends StatelessWidget {
         centerBody: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           'WELCOME TO CHAT TOGETHER',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),

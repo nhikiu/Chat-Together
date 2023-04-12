@@ -8,7 +8,7 @@ class WelcomeBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size sizeMediaQuery = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       height: sizeMediaQuery.height,
       width: double.infinity,
       child: Stack(
