@@ -27,7 +27,7 @@ class ChatScreen extends StatelessWidget {
                     ? null
                     : NetworkImage(chatuser.imageUrl),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Column(
@@ -36,12 +36,12 @@ class ChatScreen extends StatelessWidget {
                   Text(
                     chatuser.username,
                     maxLines: 1,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black54,
                         fontWeight: FontWeight.w500),
                   ),
-                  Text(
+                  const Text(
                     'Last seen not available',
                     maxLines: 1,
                     style: TextStyle(
