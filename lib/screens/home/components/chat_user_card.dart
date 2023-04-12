@@ -17,6 +17,28 @@ class ChatUserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Message? _lastMessage;
 
+    String _getSubtitle({required Message lastMessage}) {
+      String text = '';
+      //isMe == true (current user sent last message)
+      if (APIs.user.uid == _lastMessage!.fromid) {
+        text += 'You: ';
+      } else {
+        text += '${chatUser.username}: ';
+      }
+      if (_lastMessage!.type == Type.text) {
+        if (_lastMessage!.text.length >= 15) {
+          text += _lastMessage!.text.substring(0, 12);
+          text += '...';
+        } else {
+          text += _lastMessage!.text;
+        }
+      } else {
+        text += 'Sent a picture';
+      }
+
+      return text;
+    }
+
     return StreamBuilder(
         stream: APIs.getLastMessage(chatUser),
         builder: (context, snapshot) {
@@ -26,7 +48,7 @@ class ChatUserCard extends StatelessWidget {
           }
 
           return Card(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             elevation: 5,
@@ -43,12 +65,7 @@ class ChatUserCard extends StatelessWidget {
               ),
               subtitle: Text(
                 _lastMessage != null
-                    ? (APIs.user.uid == _lastMessage!.fromid
-                            ? 'You: '
-                            : '${chatUser.username}: ') +
-                        (_lastMessage!.text.length < 15
-                            ? '${_lastMessage!.text}'
-                            : '')
+                    ? _getSubtitle(lastMessage: _lastMessage!)
                     : '',
                 maxLines: 1,
               ),
@@ -62,10 +79,10 @@ class ChatUserCard extends StatelessWidget {
                     )
                   : Text(
                       _lastMessage != null
-                          ? DateUtil.getLastMessageTime(
+                          ? DateUtil.getMessageTime(
                               context: context, time: _lastMessage!.createAt)
                           : '',
-                      style: TextStyle(color: Colors.black54),
+                      style: const TextStyle(color: Colors.black54),
                     ),
             ),
           );
