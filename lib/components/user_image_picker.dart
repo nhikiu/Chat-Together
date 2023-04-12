@@ -37,9 +37,9 @@ class _UserImagePickerState extends State<UserImagePicker> {
           _pickedImage = pickedImageFile;
           widget.imagePickerFucntion(_pickedImage!);
         });
-        log('Pick Image: ${_pickedImage}');
+        log('Pick Image: $_pickedImage');
       } catch (e) {
-        log('Picker Image Error: ${e}');
+        log('Picker Image Error: $e');
         Dialogs.showSnackBar(context, 'Something wrong with your image');
         return null;
       }
@@ -53,15 +53,15 @@ class _UserImagePickerState extends State<UserImagePicker> {
             backgroundImage: (_pickedImage != null)
                 ? FileImage(_pickedImage!) as ImageProvider
                 : null),
-        Container(
+        SizedBox(
           width: sizeMediaQuery.width * 0.4,
           child: TextButton(
               onPressed: _pickImage,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.image),
-                  const Text('Add Image'),
+                children: const [
+                  Icon(Icons.image),
+                  Text('Add Image'),
                 ],
               )),
         ),

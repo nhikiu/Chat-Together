@@ -16,8 +16,8 @@ class RoundedContainer extends StatelessWidget {
     return Container(
       height: 60,
       width: sizeMediaQuery.width * 0.8,
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       decoration:
           BoxDecoration(color: color, borderRadius: BorderRadius.circular(30)),
       child: child,

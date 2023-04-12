@@ -33,7 +33,7 @@ class _RoundedPasswordFieldState extends State<RoundedPasswordField> {
       controller: widget.controller,
       decoration: InputDecoration(
         hintText: widget.title,
-        icon: Icon(
+        icon: const Icon(
           CupertinoIcons.lock,
           color: kPrimaryColor,
         ),
