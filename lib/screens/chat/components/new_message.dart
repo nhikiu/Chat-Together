@@ -1,9 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:developer';
+
+import 'package:chat_together/models/message.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../api/apis.dart';
-import '../../../constants.dart';
+import '../../../helper/dialogs.dart';
 import '../../../models/chat_user.dart';
 
 class NewMessage extends StatefulWidget {
@@ -14,20 +16,12 @@ class NewMessage extends StatefulWidget {
 }
 
 class _NewMessageState extends State<NewMessage> {
-  TextEditingController _messageController = TextEditingController();
-  var _enteredMessage = '';
+  final TextEditingController _messageController = TextEditingController();
 
   void _sendMessage() async {
     //auto close keyboard
     FocusScope.of(context).unfocus();
-
-    final user = await FirebaseAuth.instance.currentUser;
-    final userData = await APIs.firestore
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-    await APIs.sendMessage(widget.chatUser, _messageController.text);
-
+    await APIs.sendMessage(widget.chatUser, _messageController.text, Type.text);
     _messageController.clear();
   }
 
@@ -38,9 +32,22 @@ class _NewMessageState extends State<NewMessage> {
       child: Row(
         children: [
           IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                try {
+                  final ImagePicker picker = ImagePicker();
+                  final XFile? image = await picker.pickImage(
+                      source: ImageSource.gallery, imageQuality: 70);
+                  await APIs.sendImage(
+                      chatUser: widget.chatUser, image: image!.path);
+                  log('Pick Image: ${image.path}');
+                } catch (e) {
+                  log('Picker Image Error: ${e}');
+                  Dialogs.showSnackBar(
+                      context, 'Something wrong with your image');
+                }
+              },
               icon: Icon(
-                CupertinoIcons.photo,
+                Icons.photo,
                 color: Theme.of(context).colorScheme.primary,
               )),
           Expanded(
@@ -51,7 +58,7 @@ class _NewMessageState extends State<NewMessage> {
                 hintText: 'Send a message',
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-                contentPadding: EdgeInsets.all(10),
+                contentPadding: const EdgeInsets.all(10),
               ),
               onChanged: (value) {
                 setState(() {});
@@ -63,7 +70,7 @@ class _NewMessageState extends State<NewMessage> {
                   _messageController.text.trim().isEmpty ? null : _sendMessage,
               icon: Icon(
                 Icons.send,
-                color: kPrimaryColor,
+                color: Theme.of(context).colorScheme.primary,
               ))
         ],
       ),

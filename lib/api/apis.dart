@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:chat_together/models/chat_user.dart';
 import 'package:chat_together/models/message.dart';
@@ -87,7 +88,8 @@ class APIs {
         .snapshots();
   }
 
-  static Future<void> sendMessage(ChatUser chatuser, String text) async {
+  static Future<void> sendMessage(
+      ChatUser chatuser, String text, Type type) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     final userData = await APIs.firestore
         .collection('users')
@@ -99,7 +101,7 @@ class APIs {
         userimage: userData['image_url'],
         text: text,
         createAt: time,
-        type: Type.text,
+        type: type,
         username: userData['username']);
 
     final ref = firestore
@@ -115,5 +117,17 @@ class APIs {
         .orderBy('createAt', descending: true)
         .limit(1)
         .snapshots();
+  }
+
+  static Future<void> sendImage(
+      {required ChatUser chatUser, required String image}) async {
+    final ref = storage
+        .ref()
+        .child('image')
+        .child(getIdConversation(chatUser.id))
+        .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+    await ref.putFile(File(image)).whenComplete(() => null);
+    final urlImage = ref.getDownloadURL();
+    await sendMessage(chatUser, await urlImage, Type.image);
   }
 }

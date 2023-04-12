@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/message.dart';
@@ -13,7 +14,7 @@ class MessageBubble extends StatelessWidget {
 
   Widget UserAvatar() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       child: CircleAvatar(
         backgroundImage: NetworkImage(message.userimage),
       ),
@@ -34,14 +35,16 @@ class MessageBubble extends StatelessWidget {
                 ? Theme.of(context).colorScheme.primary
                 : Theme.of(context).colorScheme.secondary,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
-              bottomLeft: isMe ? Radius.circular(10) : Radius.circular(0),
-              bottomRight: isMe ? Radius.circular(0) : Radius.circular(10),
+              topLeft: const Radius.circular(15),
+              topRight: const Radius.circular(15),
+              bottomLeft:
+                  isMe ? const Radius.circular(10) : const Radius.circular(0),
+              bottomRight:
+                  isMe ? const Radius.circular(0) : const Radius.circular(10),
             ),
           ),
           width: MediaQuery.of(context).size.width * 0.5,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           margin: EdgeInsets.symmetric(horizontal: isMe ? 10 : 5, vertical: 5),
           child: Column(
             crossAxisAlignment:
@@ -67,14 +70,22 @@ class MessageBubble extends StatelessWidget {
                   )
                 ],
               ),
-              Text(
-                message.text,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    color: isMe
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary),
-              ),
+              message.type == Type.text
+                  ? Text(
+                      message.text,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: isMe
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.primary),
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: message.text,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.image),
+                    ),
             ],
           ),
         ),
