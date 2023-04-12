@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ? Container(
                   margin: EdgeInsets.symmetric(vertical: 50),
                   child: TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Username, Email,...'),
                     autofocus: true,
@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 )
-              : Text('Chat Together'),
+              : const Text('Chat Together'),
           //leading: Icon(CupertinoIcons.home),
           actions: [
             IconButton(
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     _isSearching = !_isSearching;
                   });
                 },
-                icon: Icon(CupertinoIcons.search)),
+                icon: const Icon(CupertinoIcons.search)),
           ],
         ),
         drawer: Drawer(
@@ -80,66 +80,60 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => ProfileScreen(chatuser: APIs.me)));
                   },
-                  icon: Icon(CupertinoIcons.person),
-                  label: Text('Your profile')),
+                  icon: const Icon(CupertinoIcons.person),
+                  label: const Text('Your profile')),
               TextButton.icon(
                   onPressed: () {
                     APIs.auth.signOut();
                   },
-                  icon: Icon(CupertinoIcons.square_arrow_right),
-                  label: Text('Logout'))
+                  icon: const Icon(CupertinoIcons.square_arrow_right),
+                  label: const Text('Logout'))
             ],
           )),
         ),
         body: StreamBuilder(
-          stream: APIs.getAllUsers(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-              case ConnectionState.none:
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              case ConnectionState.active:
-              case ConnectionState.done:
-                if (snapshot.hasData) {
-                  final data = snapshot.data?.docs;
-                  _chatusers =
-                      data!.map((e) => ChatUser.fromJson(e.data())).toList();
+            stream: APIs.getAllUsers(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                  for (var i in _chatusers) {
-                    log("DATA user in list: ${i.toJson()}");
-                  }
+              if (snapshot.hasData) {
+                final data = snapshot.data?.docs;
+                _chatusers =
+                    data!.map((e) => ChatUser.fromJson(e.data())).toList();
+
+                for (var i in _chatusers) {
+                  log("DATA user in list: ${i.toJson()}");
                 }
+              }
 
-                return _chatusers.isEmpty
-                    ? Center(
-                        child: Text('No connection found'),
-                      )
-                    : ListView.builder(
-                        itemCount: _isSearching
-                            ? _chatusersSearch.length
-                            : _chatusers.length,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (ctx, index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ChatScreen(
-                                      chatuser: _isSearching
-                                          ? _chatusersSearch[index]
-                                          : _chatusers[index])));
-                            },
-                            child: ChatUserCard(
-                              chatUser: _isSearching
-                                  ? _chatusersSearch[index]
-                                  : _chatusers[index],
-                            ),
-                          );
-                        },
-                      );
-            }
-          },
-        ));
+              return _chatusers.isEmpty
+                  ? const Center(
+                      child: Text('No connection found'),
+                    )
+                  : ListView.builder(
+                      itemCount: _isSearching
+                          ? _chatusersSearch.length
+                          : _chatusers.length,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (ctx, index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ChatScreen(
+                                    chatuser: _isSearching
+                                        ? _chatusersSearch[index]
+                                        : _chatusers[index])));
+                          },
+                          child: ChatUserCard(
+                            chatUser: _isSearching
+                                ? _chatusersSearch[index]
+                                : _chatusers[index],
+                          ),
+                        );
+                      },
+                    );
+            }));
   }
 }
