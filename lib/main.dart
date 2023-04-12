@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch()
             .copyWith(primary: kPrimaryColor, secondary: kPrimaryLightColor),
         scaffoldBackgroundColor: Colors.white,
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(
                 color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
             backgroundColor: Colors.white,
