@@ -9,7 +9,7 @@ import '../../../models/chat_user.dart';
 import './logout_button.dart';
 import './user_avatar.dart';
 
-class ProfileBody extends StatefulWidget {
+class ProfileBody extends StatelessWidget {
   ProfileBody({
     super.key,
     required this.chatuser,
@@ -17,11 +17,6 @@ class ProfileBody extends StatefulWidget {
 
   final ChatUser chatuser;
 
-  @override
-  State<ProfileBody> createState() => _ProfileBodyState();
-}
-
-class _ProfileBodyState extends State<ProfileBody> {
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -30,13 +25,13 @@ class _ProfileBodyState extends State<ProfileBody> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Profile'),
+        title: const Text('Your Profile'),
       ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -45,20 +40,20 @@ class _ProfileBodyState extends State<ProfileBody> {
                   width: MediaQuery.of(context).size.width,
                 ),
                 UserAvatar(
-                  chatuser: widget.chatuser,
+                  chatuser: chatuser,
                 ),
                 SizedBox(
                   height: sizeMediaQuery.height * 0.03,
                 ),
                 Text(
-                  widget.chatuser.email,
-                  style: TextStyle(color: Colors.black54, fontSize: 20),
+                  chatuser.email,
+                  style: const TextStyle(color: Colors.black54, fontSize: 20),
                 ),
                 SizedBox(
                   height: sizeMediaQuery.height * 0.03,
                 ),
                 TextFormField(
-                  initialValue: widget.chatuser.username,
+                  initialValue: chatuser.username,
                   onSaved: (newValue) {
                     APIs.me.username = newValue ?? '';
                   },
@@ -72,7 +67,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                     return null;
                   },
                   decoration: InputDecoration(
-                      prefixIcon: Icon(CupertinoIcons.person),
+                      prefixIcon: const Icon(CupertinoIcons.person),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       )),
@@ -82,7 +77,8 @@ class _ProfileBodyState extends State<ProfileBody> {
                 ),
                 ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                        shape: StadiumBorder(), minimumSize: Size(60, 40)),
+                        shape: const StadiumBorder(),
+                        minimumSize: const Size(60, 40)),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
@@ -93,12 +89,12 @@ class _ProfileBodyState extends State<ProfileBody> {
                             context, 'Profile Update Successfully');
                       }
                     },
-                    icon: Icon(CupertinoIcons.pencil),
-                    label: Text('Update')),
+                    icon: const Icon(CupertinoIcons.pencil),
+                    label: const Text('Update')),
                 SizedBox(
                   height: sizeMediaQuery.height * 0.2,
                 ),
-                LogOutButton(),
+                const LogOutButton(),
               ],
             ),
           ),

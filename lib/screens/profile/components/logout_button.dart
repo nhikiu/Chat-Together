@@ -19,7 +19,7 @@ class LogOutButton extends StatelessWidget {
             CupertinoIcons.square_arrow_right,
             color: Theme.of(context).colorScheme.error,
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Text(
@@ -33,7 +33,7 @@ class LogOutButton extends StatelessWidget {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text('Do you want log sign out ?'),
+              title: const Text('Do you want log sign out ?'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -56,7 +56,7 @@ class LogOutButton extends StatelessWidget {
                       Navigator.pop(context);
                     });
                   },
-                  child: Text(
+                  child: const Text(
                     'Confirm',
                   ),
                 ),
