@@ -6,7 +6,7 @@ class Dialogs {
       content: Text(message),
       backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.7),
       behavior: SnackBarBehavior.floating,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     ));
   }
 
@@ -14,7 +14,7 @@ class Dialogs {
     showDialog(
         context: context,
         builder: (context) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         });
   }
 }
