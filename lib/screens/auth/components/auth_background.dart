@@ -12,7 +12,7 @@ class AuthBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size sizeMediaQuery = MediaQuery.of(context).size;
 
-    return Container(
+    return SizedBox(
       height: sizeMediaQuery.height,
       width: double.infinity,
       child: Scaffold(

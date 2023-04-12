@@ -34,9 +34,9 @@ class _AuthBodyState extends State<AuthBody> {
   final _formKey = GlobalKey<FormState>();
   final _formResettKey = GlobalKey<FormState>();
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   File? _userImageFile;
 
   var _isLogIn = true;
@@ -117,7 +117,8 @@ class _AuthBodyState extends State<AuthBody> {
                   validator: _validateEmail(),
                   controller: _emailResetController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(hintText: 'Enter your email'),
+                  decoration:
+                      const InputDecoration(hintText: 'Enter your email'),
                 ),
               ),
               actions: [
@@ -125,7 +126,7 @@ class _AuthBodyState extends State<AuthBody> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 TextButton(
                   onPressed: () async {
@@ -137,12 +138,12 @@ class _AuthBodyState extends State<AuthBody> {
                           context, 'Please check your email to reset password');
 
                       Navigator.of(context).pop();
-                      log('Email enter to reset password: ${_emailReset}');
+                      log('Email enter to reset password: $_emailReset');
                       await FirebaseAuth.instance
                           .sendPasswordResetEmail(email: _emailReset);
                     }
                   },
-                  child: Text('Confirm'),
+                  child: const Text('Confirm'),
                 ),
               ],
             );
@@ -152,7 +153,7 @@ class _AuthBodyState extends State<AuthBody> {
     return AuthBackground(
         centerBody: SafeArea(
       child: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: sizeMediaQuery.height,
           width: double.infinity,
           child: Column(
@@ -169,7 +170,7 @@ class _AuthBodyState extends State<AuthBody> {
                 ),
               Text(
                 _isLogIn ? 'LOG IN' : 'SIGN UP',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: sizeMediaQuery.height * 0.01,
@@ -183,16 +184,16 @@ class _AuthBodyState extends State<AuthBody> {
                       UserImagePicker(
                         imagePickerFucntion: _pickImage,
                       ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     RoundedContainer(
                       child: TextFormField(
-                        key: ValueKey('email'),
+                        key: const ValueKey('email'),
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         validator: _validateEmail(),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Your email',
                           icon:
                               Icon(CupertinoIcons.person, color: kPrimaryColor),
@@ -203,10 +204,10 @@ class _AuthBodyState extends State<AuthBody> {
                     if (!_isLogIn)
                       RoundedContainer(
                         child: TextFormField(
-                          key: ValueKey('username'),
+                          key: const ValueKey('username'),
                           controller: _usernameController,
                           validator: _validatorUserName(),
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Username',
                             icon: Icon(CupertinoIcons.person,
                                 color: kPrimaryColor),
@@ -215,7 +216,7 @@ class _AuthBodyState extends State<AuthBody> {
                         ),
                       ),
                     RoundedPasswordField(
-                      key: ValueKey('password'),
+                      key: const ValueKey('password'),
                       onChanged: (value) {},
                       controller: _passwordController,
                       validator: _validatorPassword(),
@@ -245,7 +246,7 @@ class _AuthBodyState extends State<AuthBody> {
                     ],
                   ),
                 ),
-              if (widget.isLoading) CircularProgressIndicator(),
+              if (widget.isLoading) const CircularProgressIndicator(),
               if (!widget.isLoading)
                 RoundedButton(
                     title: _isLogIn ? 'Log In' : 'Sign Up',
