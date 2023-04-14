@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import './components/profile_body.dart';
 import '../../models/chat_user.dart';
 import 'components/user_avatar.dart';
 
@@ -33,15 +32,13 @@ class ProfileScreenViewOnly extends StatelessWidget {
               height: sizeMediaQuery.height * 0.03,
             ),
             Text(
-              chatuser.email,
-              style: const TextStyle(color: Colors.black54, fontSize: 20),
+              'Username: ${chatuser.username}',
             ),
             SizedBox(
               height: sizeMediaQuery.height * 0.03,
             ),
             Text(
-              'Username: ${chatuser.username}',
-              style: const TextStyle(color: Colors.black, fontSize: 20),
+              'Email: ${chatuser.email}',
             ),
           ],
         ),
