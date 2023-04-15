@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../services/apis.dart';
-import '../../../helper/date_util.dart';
+import '../../../utils/date_util.dart';
 import './message_bubble.dart';
 import '../../../models/chat_user.dart';
 import '../../../models/message.dart';

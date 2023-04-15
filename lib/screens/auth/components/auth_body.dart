@@ -13,7 +13,7 @@ import '../../../components/rounded_password_field.dart';
 import '../../../components/user_image_picker.dart';
 import '../../../constants.dart';
 import './auth_background.dart';
-import '../../../helper/dialogs.dart';
+import '../../../utils/dialogs.dart';
 import '../../../utils/validators.dart';
 
 class AuthBody extends StatefulWidget {

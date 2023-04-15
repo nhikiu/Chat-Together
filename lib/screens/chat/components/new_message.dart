@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../services/apis.dart';
-import '../../../helper/dialogs.dart';
+import '../../../utils/dialogs.dart';
 import '../../../models/chat_user.dart';
 import '../../../services/notification_services.dart';
 import '../../../models/message.dart';

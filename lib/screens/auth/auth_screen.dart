@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../services/apis.dart';
-import '../../helper/dialogs.dart';
+import '../../utils/dialogs.dart';
 import './components/auth_body.dart';
 import '../../models/chat_user.dart';
 

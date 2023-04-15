@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/message.dart';
 import '../../../services/apis.dart';
-import '../../../helper/date_util.dart';
+import '../../../utils/date_util.dart';
 
 class MessageBubble extends StatelessWidget {
   MessageBubble({

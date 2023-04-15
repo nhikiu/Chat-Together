@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../services/apis.dart';
-import '../../../helper/dialogs.dart';
+import '../../../utils/dialogs.dart';
 
 class LogOutButton extends StatelessWidget {
   const LogOutButton({

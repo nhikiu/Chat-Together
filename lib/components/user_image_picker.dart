@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../helper/dialogs.dart';
+import '../utils/dialogs.dart';
 
 class UserImagePicker extends StatefulWidget {
   final void Function(File imagedPicker) imagePickerFucntion;
