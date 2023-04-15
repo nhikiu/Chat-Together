@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/apis.dart';
+import '../../../services/firebase_service.dart';
 import '../../../utils/dialogs.dart';
 import '../../../models/chat_user.dart';
 import './logout_button.dart';
@@ -22,6 +22,7 @@ class ProfileBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size sizeMediaQuery = MediaQuery.of(context).size;
+    late String username;
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +56,7 @@ class ProfileBody extends StatelessWidget {
                 TextFormField(
                   initialValue: chatuser.username,
                   onSaved: (newValue) {
-                    APIs.me.username = newValue ?? '';
+                    username = newValue ?? '';
                   },
                   validator: (username) {
                     if (username == null ||
@@ -82,7 +83,7 @@ class ProfileBody extends StatelessWidget {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        APIs.updateUser();
+                        FirebaseService.updateUser(username);
                         log('PROFILE SCREEN: VALIDATOR USERNAME');
                         FocusScope.of(context).unfocus();
                         Dialogs.showSnackBar(

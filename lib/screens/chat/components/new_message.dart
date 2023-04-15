@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../services/apis.dart';
+import '../../../services/firebase_service.dart';
 import '../../../utils/dialogs.dart';
 import '../../../models/chat_user.dart';
 import '../../../services/notification_services.dart';
@@ -38,7 +38,7 @@ class _NewMessageState extends State<NewMessage> {
         },
         'data': {
           'type': 'New message',
-          'id': '${APIs.me.id}_${widget.chatUser.id}',
+          'id': '${widget.chatUser.id}',
         }
       };
       await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
@@ -55,7 +55,7 @@ class _NewMessageState extends State<NewMessage> {
     //auto close keyboard
     FocusScope.of(context).unfocus();
     message = _messageController.text;
-    await APIs.sendMessage(widget.chatUser, _messageController.text, Type.text);
+    await FirebaseService.sendMessage(widget.chatUser, _messageController.text, Type.text);
     _sendNotification();
     _messageController.clear();
   }
@@ -72,7 +72,7 @@ class _NewMessageState extends State<NewMessage> {
                   final ImagePicker picker = ImagePicker();
                   final XFile? image = await picker.pickImage(
                       source: ImageSource.gallery, imageQuality: 70);
-                  await APIs.sendImage(
+                  await FirebaseService.sendImage(
                       chatUser: widget.chatUser, image: image!.path);
                   message = 'Sent a picture';
                   _sendMessage();

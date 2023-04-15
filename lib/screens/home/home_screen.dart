@@ -1,10 +1,12 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/notification_services.dart';
-import '../../services/apis.dart';
+import '../../services/firebase_service.dart';
 import './components/chat_user_card.dart';
 import '../../screens/profile/profile_screen.dart';
 import '../../models/chat_user.dart';
@@ -24,22 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ChatUser> _chatusersSearch = [];
   bool _isSearching = false;
   static NotificationServices notificationServices = NotificationServices();
+  late ChatUser currentUser;
 
   @override
   void initState() {
     super.initState();
-    APIs.getSelfInfor();
-
     notificationServices.requestNotificationPermission();
     notificationServices.firebaseInit(context);
     notificationServices.setupInteractMessage(context);
-    //notificationServices.isTokenRefresh();
-    notificationServices.getDeviceToken().then((token) async {
-      log('INIT STATE HomePage: <device token> $token');
-      await APIs.firestore.collection('users').doc(APIs.user.uid).update({
-        'push_token': token,
-      });
-    });
   }
 
   @override
@@ -88,16 +82,35 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton.icon(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.of(context).pop();
+                  final userDoc = await FirebaseService.firestore
+                      .collection('users')
+                      .doc(FirebaseService.auth.currentUser!.uid)
+                      .get();
+                  if (userDoc.exists) {
+                    currentUser = ChatUser.fromJson(userDoc.data()!);
+                    log('CurrentUser is exist: ${currentUser.toJson()}');
+                  } else {
+                    log('CurrentUser dont exist');
+                  }
+                  notificationServices.getDeviceToken().then((token) async {
+                    log('INIT STATE HomePage: <device token> $token');
+                    await FirebaseService.firestore
+                        .collection('users')
+                        .doc(FirebaseService.user.uid)
+                        .update({
+                      'push_token': token,
+                    });
+                  });
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => ProfileScreen(chatuser: APIs.me)));
+                      builder: (_) => ProfileScreen(chatuser: currentUser)));
                 },
                 icon: const Icon(CupertinoIcons.person),
                 label: const Text('Your profile')),
             TextButton.icon(
                 onPressed: () {
-                  APIs.auth.signOut();
+                  FirebaseService.auth.signOut();
                 },
                 icon: const Icon(CupertinoIcons.square_arrow_right),
                 label: const Text('Logout'))
@@ -105,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
         )),
       ),
       body: StreamBuilder(
-        stream: APIs.getAllUsers(),
+        stream: FirebaseService.getAllUsers(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -114,10 +127,9 @@ class _HomeScreenState extends State<HomeScreen> {
           if (snapshot.hasData) {
             final data = snapshot.data?.docs;
             _chatusers = data!.map((e) => ChatUser.fromJson(e.data())).toList();
+            _chatusers.sort((a, b) => a.username.compareTo(b.username));
 
-            for (var i in _chatusers) {
-              log("DATA user in list: ${i.toJson()}");
-            }
+            log('ChatUserListLength: ${_chatusers.length}');
           }
 
           return _chatusers.isEmpty

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/apis.dart';
+import '../../../services/firebase_service.dart';
 import '../../../utils/date_util.dart';
 import './message_bubble.dart';
 import '../../../models/chat_user.dart';
@@ -25,7 +25,7 @@ class Messages extends StatelessWidget {
           );
         }
         return StreamBuilder(
-          stream: APIs.getAllMessages(chatUser),
+          stream: FirebaseService.getAllMessages(chatUser),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());

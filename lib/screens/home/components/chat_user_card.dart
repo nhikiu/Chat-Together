@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/chat_user.dart';
-import '../../../services/apis.dart';
+import '../../../services/firebase_service.dart';
 import '../../../utils/date_util.dart';
 import '../../../models/message.dart';
 
@@ -20,7 +20,7 @@ class ChatUserCard extends StatelessWidget {
     String _getSubtitle({required Message lastMessage}) {
       String text = '';
       //isMe == true (current user sent last message)
-      if (APIs.user.uid == _lastMessage!.fromid) {
+      if (FirebaseService.user.uid == _lastMessage!.fromid) {
         text += 'You: ';
       } else {
         text += '${chatUser.username}: ';
@@ -40,7 +40,7 @@ class ChatUserCard extends StatelessWidget {
     }
 
     return StreamBuilder(
-        stream: APIs.getLastMessage(chatUser),
+        stream: FirebaseService.getLastMessage(chatUser),
         builder: (context, snapshot) {
           final data = snapshot.data?.docs;
 

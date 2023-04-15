@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../services/apis.dart';
+import '../../services/firebase_service.dart';
 import '../../utils/dialogs.dart';
 import './components/auth_body.dart';
 import '../../models/chat_user.dart';
@@ -29,17 +29,17 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = true;
       });
       if (isLogin) {
-        _userCredential = await APIs.auth.signInWithEmailAndPassword(
+        _userCredential = await FirebaseService.auth.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
       } else {
-        _userCredential = await APIs.auth.createUserWithEmailAndPassword(
+        _userCredential = await FirebaseService.auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
 
-        final ref = APIs.storage
+        final ref = FirebaseService.storage
             .ref()
             .child('user_image')
             .child('${_userCredential.user!.uid}.jpg');
@@ -47,7 +47,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
         final urlImage = await ref.getDownloadURL();
 
-        await APIs.firestore
+        await FirebaseService.firestore
             .collection('users')
             .doc(_userCredential.user!.uid)
             .set({
@@ -57,12 +57,12 @@ class _AuthScreenState extends State<AuthScreen> {
           'image_url': urlImage,
           'push_token': ''
         });
-        await APIs.firestore
+        await FirebaseService.firestore
             .collection('users')
-            .doc(APIs.auth.currentUser!.uid)
+            .doc(FirebaseService.auth.currentUser!.uid)
             .get()
             .then((value) {
-          APIs.me = ChatUser.fromJson(value.data()!);
+          //FirebaseService.me = ChatUser.fromJson(value.data()!);
         });
       }
     } on PlatformException catch (e) {

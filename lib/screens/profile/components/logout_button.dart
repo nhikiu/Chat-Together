@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/apis.dart';
+import '../../../services/firebase_service.dart';
 import '../../../utils/dialogs.dart';
 
 class LogOutButton extends StatelessWidget {
@@ -49,7 +49,7 @@ class LogOutButton extends StatelessWidget {
                   onPressed: () async {
                     Dialogs.showProgressBar(context);
                     Navigator.pop(context);
-                    await APIs.auth.signOut().then((value) {
+                    await FirebaseService.auth.signOut().then((value) {
                       //hiden dialog
                       Navigator.pop(context);
                       //hiden profile screen

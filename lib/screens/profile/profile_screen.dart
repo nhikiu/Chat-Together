@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../services/apis.dart';
+import '../../services/firebase_service.dart';
 import './components/profile_body.dart';
 import '../../models/chat_user.dart';
 import '../../screens/auth/auth_screen.dart';
@@ -14,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: APIs.auth.authStateChanges(),
+        stream: FirebaseService.auth.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

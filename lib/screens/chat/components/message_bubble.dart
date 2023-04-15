@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/message.dart';
-import '../../../services/apis.dart';
+import '../../../services/firebase_service.dart';
 import '../../../utils/date_util.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -23,7 +23,7 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMe = (APIs.user.uid == message.fromid);
+    final bool isMe = (FirebaseService.user.uid == message.fromid);
 
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,

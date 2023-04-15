@@ -7,7 +7,7 @@ import './firebase_options.dart';
 import './constants.dart';
 import './screens/auth/auth_screen.dart';
 import './screens/welcome/welcome_screen.dart';
-import 'services/apis.dart';
+import 'services/firebase_service.dart';
 import './screens/home/home_screen.dart';
 
 void main() async {
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
             iconTheme: IconThemeData(color: Colors.black)),
       ),
       home: StreamBuilder(
-        stream: APIs.auth.authStateChanges(),
+        stream: FirebaseService.auth.authStateChanges(),
         builder: (context, snapshot) {
           //if use has data in database
           if (snapshot.hasData) {
