@@ -1,27 +1,62 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'package:http/http.dart' as http;
 
-import 'package:chat_together/models/message.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../api/apis.dart';
+import '../../../services/apis.dart';
 import '../../../helper/dialogs.dart';
 import '../../../models/chat_user.dart';
+import '../../../services/notification_services.dart';
+import '../../../models/message.dart';
 
 class NewMessage extends StatefulWidget {
-  const NewMessage({super.key, required this.chatUser});
+  const NewMessage(
+      {super.key, required this.chatUser, required this.notificationServices});
   final ChatUser chatUser;
+  final NotificationServices notificationServices;
   @override
   State<NewMessage> createState() => _NewMessageState();
 }
 
 class _NewMessageState extends State<NewMessage> {
   final TextEditingController _messageController = TextEditingController();
+  var message;
+
+  void _sendNotification() {
+    widget.notificationServices.getDeviceToken().then((value) async {
+      print('token in other');
+      print(widget.chatUser.pushToken);
+
+      var data = {
+        'to': widget.chatUser.pushToken,
+        'priority': 'high',
+        'notification': {
+          'title': widget.chatUser.username,
+          'body': message,
+        },
+        'data': {
+          'type': 'New message',
+          'id': '${APIs.me.id}_${widget.chatUser.id}',
+        }
+      };
+      await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          body: jsonEncode(data),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization':
+                'key=AAAAYfadbMQ:APA91bGMZCPeOxkzye7nsvnblrI0vpTkL1bhQ91THgdXsbI3C4f0n62onEY5fo06xFq0Ng2KL75uiJkrAmIkvWJXCrBLKuz33HIbY-2jnzYg635u5K960b46Nlfp_JyNLDjxIJxAY8JH',
+          });
+    });
+  }
 
   void _sendMessage() async {
     //auto close keyboard
     FocusScope.of(context).unfocus();
+    message = _messageController.text;
     await APIs.sendMessage(widget.chatUser, _messageController.text, Type.text);
+    _sendNotification();
     _messageController.clear();
   }
 
@@ -39,6 +74,8 @@ class _NewMessageState extends State<NewMessage> {
                       source: ImageSource.gallery, imageQuality: 70);
                   await APIs.sendImage(
                       chatUser: widget.chatUser, image: image!.path);
+                  message = 'Sent a picture';
+                  _sendMessage();
                   log('Pick Image: ${image.path}');
                 } catch (e) {
                   log('Picker Image Error: ${e}');

@@ -1,17 +1,20 @@
-import 'package:chat_together/screens/profile/profile_screen_view_only.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/chat_user.dart';
 import './components/messages.dart';
 import './components/new_message.dart';
+import '../profile/profile_screen_view_only.dart';
+import '../../services/notification_services.dart';
 
 class ChatScreen extends StatelessWidget {
   static const routeName = '/chat';
 
-  const ChatScreen({super.key, required this.chatuser});
+  const ChatScreen(
+      {super.key, required this.chatuser, required this.notificationServices});
 
   final ChatUser chatuser;
+  final NotificationServices notificationServices;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +68,10 @@ class ChatScreen extends StatelessWidget {
               child: Messages(
             chatUser: chatuser,
           )),
-          NewMessage(chatUser: chatuser)
+          NewMessage(
+            chatUser: chatuser,
+            notificationServices: notificationServices,
+          )
         ],
       ),
     );

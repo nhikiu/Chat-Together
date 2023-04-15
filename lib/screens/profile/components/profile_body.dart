@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../api/apis.dart';
+import '../../../services/apis.dart';
 import '../../../helper/dialogs.dart';
 import '../../../models/chat_user.dart';
 import './logout_button.dart';

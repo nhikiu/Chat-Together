@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ import '../../../components/user_image_picker.dart';
 import '../../../constants.dart';
 import './auth_background.dart';
 import '../../../helper/dialogs.dart';
+import '../../../utils/validators.dart';
 
 class AuthBody extends StatefulWidget {
   const AuthBody({
@@ -69,34 +69,16 @@ class _AuthBodyState extends State<AuthBody> {
     }
   }
 
-  FormFieldValidator _validateEmail() {
-    return (value) {
-      if (value == null || value.isEmpty || !EmailValidator.validate(value)) {
-        return 'Please enter a valid email address.';
-      }
-      return null;
-    };
+  String? _validateEmail(String? email) {
+    return Validators.validateEmail(email);
   }
 
-  FormFieldValidator _validatorUserName() {
-    return (username) {
-      if (username == null || username.isEmpty || username.length > 12) {
-        return 'Username can be upto a maximum of 12 characters';
-      }
-      return null;
-    };
+  String? _validateUserName(String? username) {
+    return Validators.validateUsername(username);
   }
 
-  FormFieldValidator _validatorPassword() {
-    return (password) {
-      if (password == null ||
-          password.isEmpty ||
-          password.length < 8 ||
-          password.length > 20) {
-        return 'Password must be between 8 - 20 characters';
-      }
-      return null;
-    };
+  String? _validatePassword(String? password) {
+    return Validators.validatePassword(password);
   }
 
   @override
@@ -114,7 +96,7 @@ class _AuthBodyState extends State<AuthBody> {
                 key: _formResettKey,
                 child: TextFormField(
                   autofocus: true,
-                  validator: _validateEmail(),
+                  validator: _validateEmail,
                   controller: _emailResetController,
                   keyboardType: TextInputType.emailAddress,
                   decoration:
@@ -192,7 +174,8 @@ class _AuthBodyState extends State<AuthBody> {
                         key: const ValueKey('email'),
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        validator: _validateEmail(),
+                        validator: Validators.validateEmail,
+                        //_validateEmail(),
                         decoration: const InputDecoration(
                           hintText: 'Your email',
                           icon:
@@ -206,7 +189,7 @@ class _AuthBodyState extends State<AuthBody> {
                         child: TextFormField(
                           key: const ValueKey('username'),
                           controller: _usernameController,
-                          validator: _validatorUserName(),
+                          validator: _validateUserName,
                           decoration: const InputDecoration(
                             hintText: 'Username',
                             icon: Icon(CupertinoIcons.person,
@@ -219,7 +202,7 @@ class _AuthBodyState extends State<AuthBody> {
                       key: const ValueKey('password'),
                       onChanged: (value) {},
                       controller: _passwordController,
-                      validator: _validatorPassword(),
+                      validator: (value) => Validators.validatePassword(value),
                     ),
                   ],
                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/chat_user.dart';
-import '../../../api/apis.dart';
+import '../../../services/apis.dart';
 import '../../../helper/date_util.dart';
 import '../../../models/message.dart';
 
@@ -43,7 +43,8 @@ class ChatUserCard extends StatelessWidget {
         stream: APIs.getLastMessage(chatUser),
         builder: (context, snapshot) {
           final data = snapshot.data?.docs;
-          if (data != null && data.first.exists) {
+
+          if (data != null && data.isNotEmpty && data.first.exists) {
             _lastMessage = Message.fromJson(data.first.data());
           }
 
@@ -66,7 +67,7 @@ class ChatUserCard extends StatelessWidget {
               subtitle: Text(
                 _lastMessage != null
                     ? _getSubtitle(lastMessage: _lastMessage!)
-                    : '',
+                    : 'Send a message',
                 maxLines: 1,
               ),
               trailing: Text(

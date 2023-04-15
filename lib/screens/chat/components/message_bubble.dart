@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/message.dart';
-import '../../../api/apis.dart';
+import '../../../services/apis.dart';
 import '../../../helper/date_util.dart';
 
 class MessageBubble extends StatelessWidget {

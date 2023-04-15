@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../api/apis.dart';
+import '../../../services/apis.dart';
 import '../../../helper/date_util.dart';
 import './message_bubble.dart';
 import '../../../models/chat_user.dart';
@@ -34,7 +31,6 @@ class Messages extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             final data = snapshot.data?.docs;
-            log('DATA MESSAGE at 0: ${jsonEncode(data?[0].data())}');
 
             _messages =
                 data?.map((e) => Message.fromJson(e.data())).toList() ?? [];
