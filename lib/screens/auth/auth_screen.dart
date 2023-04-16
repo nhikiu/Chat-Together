@@ -34,7 +34,8 @@ class _AuthScreenState extends State<AuthScreen> {
           password: password,
         );
       } else {
-        _userCredential = await FirebaseService.auth.createUserWithEmailAndPassword(
+        _userCredential =
+            await FirebaseService.auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
@@ -46,24 +47,13 @@ class _AuthScreenState extends State<AuthScreen> {
         await ref.putFile(image!).whenComplete(() => null);
 
         final urlImage = await ref.getDownloadURL();
-
-        await FirebaseService.firestore
-            .collection('users')
-            .doc(_userCredential.user!.uid)
-            .set({
-          'id': _userCredential.user!.uid,
-          'email': email,
-          'username': username,
-          'image_url': urlImage,
-          'push_token': ''
-        });
-        await FirebaseService.firestore
-            .collection('users')
-            .doc(FirebaseService.auth.currentUser!.uid)
-            .get()
-            .then((value) {
-          //FirebaseService.me = ChatUser.fromJson(value.data()!);
-        });
+        ChatUser chatUser = ChatUser(
+            id: _userCredential.user!.uid,
+            pushToken: '',
+            imageUrl: urlImage,
+            email: email,
+            username: username);
+        FirebaseService.createUser(chatUser);
       }
     } on PlatformException catch (e) {
       String message = 'An error occurred, please check your credential';

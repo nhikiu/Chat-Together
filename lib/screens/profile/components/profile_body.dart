@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -84,7 +82,6 @@ class ProfileBody extends StatelessWidget {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         FirebaseService.updateUser(username);
-                        log('PROFILE SCREEN: VALIDATOR USERNAME');
                         FocusScope.of(context).unfocus();
                         Dialogs.showSnackBar(
                             context, 'Profile Update Successfully');

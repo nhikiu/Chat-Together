@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,38 +15,26 @@ class FirebaseService {
   static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
   static User get user => auth.currentUser!;
 
-  //Kiểm tra xem người dùng đã tồn tại trong cơ sở dữ liệu Firestore hay chưa.
-  static Future<bool> userExist() async =>
-      (await firestore.collection('users').doc(user.uid).get()).exists;
-
   //Tạo một người dùng mới trên Firebase.
-  static Future<void> createUser() async {
-    final chatUser = ChatUser(
-      id: user.uid,
-      pushToken: '',
-      imageUrl: user.photoURL.toString(),
-      email: user.email.toString(),
-      username: user.displayName.toString(),
-    );
-
-    return await firestore
-        .collection('users')
-        .doc(user.uid)
-        .set(chatUser.toJson());
+  static Future<void> createUser(ChatUser chatUser) async {
+    return await firestore.collection('users').doc(user.uid).set(chatUser.toJson());
   }
 
   //Lấy danh sách tất cả các người dùng khác so với người dùng hiện tại.
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
-    return firestore
-        .collection('users')
-        .where('id', isNotEqualTo: user.uid)
-        .snapshots();
+    return firestore.collection('users').where('id', isNotEqualTo: user.uid).snapshots();
   }
 
   // Cập nhật thông tin người dùng.
   static Future<void> updateUser(String username) async {
     await firestore.collection('users').doc(user.uid).update({
       'username': username,
+    });
+  }
+
+  static Future<void> updateToken(String token) async {
+    await firestore.collection('users').doc(user.uid).update({
+      'push_token': token,
     });
   }
 
@@ -68,9 +55,18 @@ class FirebaseService {
         .snapshots();
   }
 
+  //Lấy tin nhắn gần đây nhất trong cuộc trò chuyện giữa người dùng hiện tại và một người dùng khác.
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
+      ChatUser chatuser) {
+    return firestore
+        .collection('chats/${getIdConversation(chatuser.id)}/messages/')
+        .orderBy('createAt', descending: true)
+        .limit(1)
+        .snapshots();
+  }
+
   //Gửi một tin nhắn đến một người dùng khác.
-  static Future<void> sendMessage(
-      ChatUser chatuser, String text, Type type) async {
+  static Future<void> sendMessage(ChatUser chatuser, String text, Type type) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     final userData = await firestore.collection('users').doc(user.uid).get();
     final Message message = Message(
@@ -82,25 +78,13 @@ class FirebaseService {
         type: type,
         username: userData['username']);
 
-    final ref = firestore
-        .collection('chats/${getIdConversation(chatuser.id)}/messages/');
+    final ref = firestore.collection('chats/${getIdConversation(chatuser.id)}/messages/');
 
     await ref.doc(time).set(message.toJson());
   }
 
-  //Lấy tin nhắn gần đây nhất trong cuộc trò chuyện giữa người dùng hiện tại và một người dùng khác.
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
-      ChatUser chatuser) {
-    return firestore
-        .collection('chats/${getIdConversation(chatuser.id)}/messages/')
-        .orderBy('createAt', descending: true)
-        .limit(1)
-        .snapshots();
-  }
-
   //Gửi một hình ảnh đến một người dùng khác.
-  static Future<void> sendImage(
-      {required ChatUser chatUser, required String image}) async {
+  static Future<void> sendImage({required ChatUser chatUser, required String image}) async {
     final ref = storage
         .ref()
         .child('image')
