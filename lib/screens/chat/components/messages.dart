@@ -8,7 +8,10 @@ import '../../../models/chat_user.dart';
 import '../../../models/message.dart';
 
 class Messages extends StatelessWidget {
-  Messages({super.key, required this.chatUser});
+  Messages({
+    super.key,
+    required this.chatUser,
+  });
 
   final ChatUser chatUser;
 

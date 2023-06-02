@@ -15,7 +15,7 @@ class ChatUserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Message? _lastMessage;
+    Message? _lastMessage = null;
 
     String _getSubtitle({required Message lastMessage}) {
       String text = '';

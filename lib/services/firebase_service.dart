@@ -17,12 +17,18 @@ class FirebaseService {
 
   //Tạo một người dùng mới trên Firebase.
   static Future<void> createUser(ChatUser chatUser) async {
-    return await firestore.collection('users').doc(user.uid).set(chatUser.toJson());
+    return await firestore
+        .collection('users')
+        .doc(user.uid)
+        .set(chatUser.toJson());
   }
 
   //Lấy danh sách tất cả các người dùng khác so với người dùng hiện tại.
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
-    return firestore.collection('users').where('id', isNotEqualTo: user.uid).snapshots();
+    return firestore
+        .collection('users')
+        .where('id', isNotEqualTo: user.uid)
+        .snapshots();
   }
 
   // Cập nhật thông tin người dùng.
@@ -66,7 +72,8 @@ class FirebaseService {
   }
 
   //Gửi một tin nhắn đến một người dùng khác.
-  static Future<void> sendMessage(ChatUser chatuser, String text, Type type) async {
+  static Future<void> sendMessage(
+      ChatUser chatuser, String text, Type type) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     final userData = await firestore.collection('users').doc(user.uid).get();
     final Message message = Message(
@@ -78,13 +85,15 @@ class FirebaseService {
         type: type,
         username: userData['username']);
 
-    final ref = firestore.collection('chats/${getIdConversation(chatuser.id)}/messages/');
+    final ref = firestore
+        .collection('chats/${getIdConversation(chatuser.id)}/messages/');
 
     await ref.doc(time).set(message.toJson());
   }
 
   //Gửi một hình ảnh đến một người dùng khác.
-  static Future<void> sendImage({required ChatUser chatUser, required String image}) async {
+  static Future<void> sendImage(
+      {required ChatUser chatUser, required String image}) async {
     final ref = storage
         .ref()
         .child('image')

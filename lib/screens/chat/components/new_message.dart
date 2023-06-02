@@ -55,7 +55,8 @@ class _NewMessageState extends State<NewMessage> {
     //auto close keyboard
     FocusScope.of(context).unfocus();
     message = _messageController.text;
-    await FirebaseService.sendMessage(widget.chatUser, _messageController.text, Type.text);
+    await FirebaseService.sendMessage(
+        widget.chatUser, _messageController.text, Type.text);
     _sendNotification();
     _messageController.clear();
   }
@@ -75,7 +76,7 @@ class _NewMessageState extends State<NewMessage> {
                   await FirebaseService.sendImage(
                       chatUser: widget.chatUser, image: image!.path);
                   message = 'Sent a picture';
-                  _sendMessage();
+                  // _sendMessage();
                   log('Pick Image: ${image.path}');
                 } catch (e) {
                   log('Picker Image Error: ${e}');

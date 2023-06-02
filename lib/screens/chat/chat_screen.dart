@@ -10,8 +10,11 @@ import '../../services/notification_services.dart';
 class ChatScreen extends StatelessWidget {
   static const routeName = '/chat';
 
-  const ChatScreen(
-      {super.key, required this.chatuser, required this.notificationServices});
+  const ChatScreen({
+    super.key,
+    required this.chatuser,
+    required this.notificationServices,
+  });
 
   final ChatUser chatuser;
   final NotificationServices notificationServices;

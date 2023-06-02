@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_together/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/message.dart';
@@ -24,7 +25,6 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isMe = (FirebaseService.user.uid == message.fromid);
-
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
@@ -54,7 +54,7 @@ class MessageBubble extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    message.username,
+                    isMe ? "Me" : message.username,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: isMe
